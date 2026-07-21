@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { initialCatalog } from './data';
 import { AppProduct, ProductSelection } from './types';
 import { ProductList } from './components/ProductList';
+import { QuoteSummaryList } from './components/QuoteSummaryList';
 import { Search, Copy, Trash2, Upload, FileText } from 'lucide-react';
 import { getPackSheets } from './utils';
 
@@ -50,7 +51,7 @@ function App() {
   const { totalCost, totalItems } = useMemo(() => {
     let cost = 0;
     let items = 0;
-    Object.entries(selections).forEach(([productId, sel]) => {
+    (Object.entries(selections) as [string, ProductSelection][]).forEach(([productId, sel]) => {
       if (sel.qty > 0 || sel.menudeo > 0) {
         items++;
         if (sel.menudeo > 0) {
@@ -220,6 +221,13 @@ function App() {
       </header>
 
       <main className="max-w-3xl mx-auto p-4 space-y-4">
+        <QuoteSummaryList
+          catalog={catalog}
+          selections={selections}
+          onUpdateSelection={handleUpdateSelection}
+          onClearAll={handleReset}
+        />
+
         <ProductList
           products={catalog}
           searchTerm={searchTerm}

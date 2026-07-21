@@ -36,20 +36,30 @@ async function startServer() {
                 },
               },
               {
-                text: `Actúa como un ingeniero industrial experto en logística y compras.
-He proporcionado un catálogo PDF con varias páginas de productos de papel y precios.
-INSTRUCCIÓN CRÍTICA: DEBES extraer ABSOLUTAMENTE TODOS los productos de TODAS las páginas. No omitas ni agrupes nada. Extrae toda la información técnica.
-Para cada producto extrae con precisión:
-- category: (basado en los encabezados como CARTULINAS, BOND, PERIODICOS, COUCHES 2026, CARTONES, DUPLEX, AUTOCOPIATIVO, ADHESIVOS, etc.)
-- name: La descripción completa del producto.
-- grammage: El gramaje (ej. 150g, 180 Gr., 75gr, 12pts). Si no tiene, omítelo o déjalo nulo.
-- size: La medida o formato (ej. 61x86cm, 72x102cm, A4, oficio). Si no tiene, omítelo o déjalo nulo.
-- brand: La marca (ej. FEDRIGONI, CHAMBRILL, PAPER ONE, ZENIT, etc). Si no se especifica explícitamente, pero es conocida, inclúyela. Si no, nulo.
-- unit: La unidad de venta (ej. RSM/100, Millar, Rsmx500).
-- price: El precio total principal (como número).
-- unitPrice: El precio unitario si está especificado, nulo si no.
+                text: `Actúa como un ingeniero industrial experto en logística y compras de imprenta.
+He proporcionado un catálogo PDF con varias páginas de productos de papel y precios de Castillo Paper.
+INSTRUCCIÓN CRÍTICA DE COBERTURA:
+1. DEBES extraer ABSOLUTAMENTE TODOS los productos listados en cada fila de todas las tablas de todas las páginas del PDF. No omitas ningún ítem, no agrupes filas similares, no simplifiques la lista y no resumas. Cada fila individual de papel, gramaje, marca y precio es de vital importancia y se debe incluir.
+2. Mapea la categoría (category) de cada producto a uno de estos valores estandarizados de manera exacta:
+   - "1. COUCHÉS" (para Couches)
+   - "2. AUTOCOPIATIVOS" (para Autocopiativos)
+   - "3. BOND" (para Bond, Fotocopia)
+   - "4. PERIÓDICOS" (para Periodicos)
+   - "5. CARTULINAS" (para Cartulinas, Clupac)
+   - "6. CARTONES Y FOLCOTE" (para Folcote, Graphics, Duplex, Liner, Antigrasa)
+   - "7. ADHESIVOS" (para Adhesivos, Ritrama, Star, JAC, Vinil PVC, LP80-*)
+3. Para cada producto extrae con precisión:
+   - id: Genera un identificador único consecutivo, ej: "p_1", "p_2", "p_3", etc.
+   - category: La categoría estandarizada de la lista anterior.
+   - name: La descripción completa del producto tal como figura en el PDF (conserva marcas, gramajes, colores, dimensiones y comentarios si los hay).
+   - unit: La unidad de venta de la columna 'Unidad' o similar (ej. RSM/100, Millar, Rsmx500, Rsmx125, Rsmx250).
+   - price: El precio total principal como un número flotante (ej. 176.90).
+   - unitPrice: El precio unitario de la columna 'Unid S/.' (ej. 1.1, 2, 2.4, 2.3, 2.9, 3.3). Si no tiene precio por unidad especificado en esa columna o similar, pon null.
+   - grammage: El gramaje (ej. "150g", "180 Gr.", "200g", "40GR"). Si no se puede deducir del nombre, pon null.
+   - size: La dimensión del pliego (ej. "70x100cm", "61x86cm", "A4", "oficio"). Si no se puede deducir, pon null.
+   - brand: La marca comercial (ej. "FEDRIGONI", "CHAMBRILL", "PAPER ONE", "ZENIT", "ARCLAD", "RITRAMA"). Si no figura, pon null.
 
-Devuelve un JSON array estructurado con todos los ítems.`,
+Devuelve un JSON array estructurado que contiene absolutamente todos los ítems de todas las tablas del PDF sin excepción.`,
               },
             ],
           },
